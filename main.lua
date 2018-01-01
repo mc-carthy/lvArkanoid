@@ -36,13 +36,45 @@ function collisions.resolve_collisions()
     collisions.platform_walls_collision(platform, walls)
 end
 
+function ball.rebound(shift_ball_x, shift_ball_y)
+    local min_shift = math.min(math.abs(shift_ball_x), math.abs(shift_ball_y))
+
+    if math.abs(shift_ball_x) == min_shift then
+        shift_ball_y = 0
+    else
+        shift_ball_x = 0
+    end
+
+    ball.position_x = ball.position_x + shift_ball_x
+    ball.position_y = ball.position_y + shift_ball_y
+
+    if shift_ball_x ~= 0 then
+        ball.speed_x = -ball.speed_x
+    end
+    if shift_ball_y ~= 0 then
+        ball.speed_y = -ball.speed_y
+    end
+end
+
 function collisions.check_rectangles_overlap(a, b)
     local overlap = false
+    local shift_b_x, shift_b_y = 0, 0
     if not (a.x + a.width < b.x or b.x + b.width < a.x or
-        a.y + a.height < b.y or b.y + b.height < a.y) then
+        a.y + a.height < b.y or b.y + b.height < a.y
+    ) then
+        if (a.x + a.width / 2) < (b.x + b.width / 2) then
+            shift_b_x = (a.x + a.width) - b.x
+        else
+            shift_b_x = a.x - (b.x + b.width)
+        end
+        if (a.y + a.height / 2) < (b.y + b.height / 2) then
+            shift_b_y = (a.y + a.height) - b.x
+        else
+            shift_b_y = a.y - (b.y + b.height)
+        end
         overlap = true
     end
-    return overlap
+    return overlap, shift_b_x, shift_b_y
 end
 
 function collisions.ball_platform_collision(ball, platform)
@@ -58,8 +90,9 @@ function collisions.ball_platform_collision(ball, platform)
         width = platform.width,
         height = platform.height
     }
-    if collisions.check_rectangles_overlap(a, b) then
-        print("Ball-Platform collision")
+    overlap, shift_ball_x, shift_ball_y = collisions.check_rectangles_overlap(b, a)
+    if overlap then
+        ball.rebound(shift_ball_x, shift_ball_y)
     end
 end
 
@@ -211,7 +244,6 @@ function bricks.update()
 end
 
 function bricks.update_brick(brick)
-
 end
 
 function walls.update()
@@ -221,7 +253,6 @@ function walls.update()
 end
 
 function walls.update_wall(wall)
-
 end
 
 function ball.draw()
@@ -295,4 +326,10 @@ function love.draw()
     platform.draw()
     bricks.draw()
     walls.draw()
+end
+
+function love.keyreleased(key)
+   if key == 'escape' then
+      love.event.quit()
+   end
 end
