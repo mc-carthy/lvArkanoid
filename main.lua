@@ -23,6 +23,11 @@ bricks.vertical_distance = 15
 bricks.brick_width = 50
 bricks.brick_height = 30
 
+local walls = {}
+walls.wall_thickness = 20
+walls.current_level_walls = {}
+
+
 function bricks.contruct_level()
     for col = 1, bricks.columns do
         for row = 1, bricks.rows do
@@ -49,6 +54,47 @@ function bricks.new_brick(position_x, position_y, width, height)
     }
 end
 
+function walls.construct_walls()
+    local left_wall = walls.new_wall(
+        0,
+        0,
+        walls.wall_thickness,
+        love.graphics.getHeight()
+    )
+    local right_wall = walls.new_wall(
+        love.graphics.getWidth() - walls.wall_thickness,
+        0,
+        walls.wall_thickness,
+        love.graphics.getHeight()
+    )
+    local top_wall = walls.new_wall(
+        0,
+        0,
+        love.graphics.getWidth(),
+        walls.wall_thickness
+    )
+    local bottom_wall = walls.new_wall(
+        0,
+        love.graphics.getHeight() - walls.wall_thickness,
+        love.graphics.getWidth(),
+        walls.wall_thickness
+    )
+
+    walls.current_level_walls["left"] = left_wall
+    walls.current_level_walls["right"] = right_wall
+    walls.current_level_walls["top"] = top_wall
+    walls.current_level_walls["bottom"] = bottom_wall
+end
+
+function walls.new_wall(position_x, position_y, width, height)
+    return {
+        position_x = position_x,
+        position_y = position_y,
+        width = width,
+        height = height
+    }
+end
+
 function ball.update(dt)
     ball.position_x = ball.position_x + ball.speed_x * dt
     ball.position_y = ball.position_y + ball.speed_y * dt
@@ -70,6 +116,16 @@ function bricks.update()
 end
 
 function bricks.update_brick(brick)
+
+end
+
+function walls.update()
+    for _, wall in pairs(walls.current_level_walls) do
+        walls.update_wall(wall)
+    end
+end
+
+function walls.update_wall(wall)
 
 end
 
@@ -110,20 +166,37 @@ function bricks.draw_brick(brick)
     )
 end
 
+function walls.draw()
+    for _, wall in pairs(walls.current_level_walls) do
+        walls.draw_wall(wall)
+    end
+end
+
+function walls.draw_wall(wall)
+    love.graphics.rectangle(
+        "line",
+        wall.position_x,
+        wall.position_y,
+        wall.width,
+        wall.height
+    )
+end
+
 function love.load()
     bricks.contruct_level()
-    -- bricks.add_to_current_level_bricks(bricks.new_brick(100, 100))
-    -- bricks.add_to_current_level_bricks(bricks.new_brick(160, 100))
+    walls.construct_walls()
 end
 
 function love.update(dt)
     ball.update(dt)
     platform.update(dt)
     bricks.update()
+    walls.update()
 end
 
 function love.draw()
     ball.draw()
     platform.draw()
     bricks.draw()
+    walls.draw()
 end
