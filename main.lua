@@ -31,9 +31,9 @@ walls.current_level_walls = {}
 
 function collisions.resolve_collisions()
     collisions.ball_platform_collision(ball, platform)
-    -- collisions.ball_walls_collision(ball, walls)
-    -- collisions.ball_bricks_collision(ball, bricks)
-    -- collisions.platform_walls_collision(platform, walls)
+    collisions.ball_walls_collision(ball, walls)
+    collisions.ball_bricks_collision(ball, bricks)
+    collisions.platform_walls_collision(platform, walls)
 end
 
 function collisions.check_rectangles_overlap(a, b)
@@ -60,6 +60,66 @@ function collisions.ball_platform_collision(ball, platform)
     }
     if collisions.check_rectangles_overlap(a, b) then
         print("Ball-Platform collision")
+    end
+end
+
+function collisions.ball_walls_collision(ball, walls)
+    a = {
+        x = ball.position_x - ball.radius,
+        y = ball.position_y - ball.radius,
+        width = ball.radius * 2,
+        height = ball.radius * 2
+    }
+    for _, wall in pairs(walls.current_level_walls) do
+        b = {
+            x = wall.position_x,
+            y = wall.position_y,
+            width = wall.width,
+            height = wall.height
+        }
+        if collisions.check_rectangles_overlap(a, b) then
+            print("Ball-Wall collision")
+        end
+    end
+end
+
+function collisions.ball_bricks_collision(ball, bricks)
+    a = {
+        x = ball.position_x - ball.radius,
+        y = ball.position_y - ball.radius,
+        width = ball.radius * 2,
+        height = ball.radius * 2
+    }
+    for _, brick in pairs(bricks.current_level_bricks) do
+        b = {
+            x = brick.position_x,
+            y = brick.position_y,
+            width = brick.width,
+            height = brick.height
+        }
+        if collisions.check_rectangles_overlap(a, b) then
+            print("Ball-Brick collision")
+        end
+    end
+end
+
+function collisions.platform_walls_collision(platform, walls)
+    a = {
+        x = platform.position_x,
+        y = platform.position_y,
+        width = platform.width,
+        height = platform.height
+    }
+    for _, wall in pairs(walls.current_level_walls) do
+        b = {
+            x = wall.position_x,
+            y = wall.position_y,
+            width = wall.width,
+            height = wall.height
+        }
+        if collisions.check_rectangles_overlap(a, b) then
+            print("Platform-Wall collision")
+        end
     end
 end
 
