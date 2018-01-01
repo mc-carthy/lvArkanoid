@@ -1,3 +1,5 @@
+local collisions = {}
+
 local ball = {}
 ball.position_x = 300
 ball.position_y = 300
@@ -27,6 +29,39 @@ local walls = {}
 walls.wall_thickness = 20
 walls.current_level_walls = {}
 
+function collisions.resolve_collisions()
+    collisions.ball_platform_collision(ball, platform)
+    -- collisions.ball_walls_collision(ball, walls)
+    -- collisions.ball_bricks_collision(ball, bricks)
+    -- collisions.platform_walls_collision(platform, walls)
+end
+
+function collisions.check_rectangles_overlap(a, b)
+    local overlap = false
+    if not (a.x + a.width < b.x or b.x + b.width < a.x or
+        a.y + a.height < b.y or b.y + b.height < a.y) then
+        overlap = true
+    end
+    return overlap
+end
+
+function collisions.ball_platform_collision(ball, platform)
+    a = {
+        x = ball.position_x - ball.radius,
+        y = ball.position_y - ball.radius,
+        width = ball.radius * 2,
+        height = ball.radius * 2
+    }
+    b = {
+        x = platform.position_x,
+        y = platform.position_y,
+        width = platform.width,
+        height = platform.height
+    }
+    if collisions.check_rectangles_overlap(a, b) then
+        print("Ball-Platform collision")
+    end
+end
 
 function bricks.contruct_level()
     for col = 1, bricks.columns do
@@ -192,6 +227,7 @@ function love.update(dt)
     platform.update(dt)
     bricks.update()
     walls.update()
+    collisions.resolve_collisions()
 end
 
 function love.draw()
