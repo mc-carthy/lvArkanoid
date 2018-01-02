@@ -60,6 +60,10 @@ function platform.bounce_from_wall(shift_platform_x, shift_platform_y)
        platform.position_x = platform.position_x + shift_platform_x
 end
 
+function bricks.brick_hit_by_ball(i, brick, shift_ball_x, shift_ball_y)
+    table.remove(bricks.current_level_bricks, i)
+end
+
 function collisions.check_rectangles_overlap(a, b)
     local overlap = false
     local shift_b_x, shift_b_y = 0, 0
@@ -123,21 +127,24 @@ function collisions.ball_walls_collision(ball, walls)
 end
 
 function collisions.ball_bricks_collision(ball, bricks)
+    local overlap, shift_ball_x, shift_ball_y
     a = {
         x = ball.position_x - ball.radius,
         y = ball.position_y - ball.radius,
         width = ball.radius * 2,
         height = ball.radius * 2
     }
-    for _, brick in pairs(bricks.current_level_bricks) do
+    for i, brick in pairs(bricks.current_level_bricks) do
         b = {
             x = brick.position_x,
             y = brick.position_y,
             width = brick.width,
             height = brick.height
         }
-        if collisions.check_rectangles_overlap(a, b) then
-            print("Ball-Brick collision")
+        overlap, shift_ball_x, shift_ball_y = collisions.check_rectangles_overlap(b, a)
+        if overlap then
+            ball.rebound(shift_ball_x, shift_ball_y)
+            bricks.brick_hit_by_ball(i, brick, shift_ball_x, shift_ball_y)
         end
     end
 end
