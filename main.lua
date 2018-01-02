@@ -29,6 +29,32 @@ local walls = {}
 walls.wall_thickness = 20
 walls.current_level_walls = {}
 
+local levels = {}
+levels.sequence = {}
+levels.current_level = 1
+levels.game_finished = false
+levels.sequence[1] = {
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1 },
+   { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1 },
+   { 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0 },
+   { 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0 },
+   { 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+}
+
+levels.sequence[2] = {
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+   { 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1 },
+   { 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0 },
+   { 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0 },
+   { 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0 },
+   { 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1 },
+   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+}
+
 function collisions.resolve_collisions()
     collisions.ball_platform_collision(ball, platform)
     collisions.ball_walls_collision(ball, walls)
@@ -54,6 +80,11 @@ function ball.rebound(shift_ball_x, shift_ball_y)
     if shift_ball_y ~= 0 then
         ball.speed_y = -ball.speed_y
     end
+end
+
+function ball.reposition()
+   ball.position_x = 200
+   ball.position_y = 500
 end
 
 function platform.bounce_from_wall(shift_platform_x, shift_platform_y)
@@ -171,15 +202,18 @@ function collisions.platform_walls_collision(platform, walls)
     end
 end
 
-function bricks.contruct_level()
-    for col = 1, bricks.columns do
-        for row = 1, bricks.rows do
-            local new_brick_position_x = bricks.top_left_position_x + (col - 1)
-                * (bricks.brick_width + bricks.horizontal_distance)
-            local new_brick_position_y = bricks.top_left_position_y + (row - 1)
-                * (bricks.brick_height + bricks.vertical_distance)
-            local new_brick = bricks.new_brick(new_brick_position_x, new_brick_position_y)
-            bricks.add_to_current_level_bricks(new_brick)
+function bricks.construct_level(level_bricks_arrangement)
+    bricks.no_more_bricks = false
+    for row_index, row in ipairs(level_bricks_arrangement) do
+        for col_index, brick_type in ipairs(row) do
+            if brick_type ~= 0 then
+                local new_brick_position_x = bricks.top_left_position_x + (col_index - 1)
+                    * (bricks.brick_width + bricks.horizontal_distance)
+                local new_brick_position_y = bricks.top_left_position_y + (row_index - 1)
+                    * (bricks.brick_height + bricks.vertical_distance)
+                local new_brick = bricks.new_brick(new_brick_position_x, new_brick_position_y)
+                bricks.add_to_current_level_bricks( new_brick )
+            end
         end
     end
 end
@@ -253,8 +287,12 @@ function platform.update(dt)
 end
 
 function bricks.update()
-    for _, brick in pairs(bricks.current_level_bricks) do
-        bricks.update_brick(brick)
+    if #bricks.current_level_bricks == 0 then
+        bricks.no_more_bricks = true
+    else
+        for _, brick in pairs(bricks.current_level_bricks) do
+            bricks.update_brick(brick)
+        end
     end
 end
 
@@ -323,8 +361,20 @@ function walls.draw_wall(wall)
     )
 end
 
+function levels.switch_to_next_level(bricks)
+    if bricks.no_more_bricks then
+        if levels.current_level < #levels.sequence then
+            levels.current_level = levels.current_level + 1
+            bricks.construct_level(levels.sequence[levels.current_level])
+            ball.reposition()
+        end
+    else
+        levels.game_finished = true
+    end
+end
+
 function love.load()
-    bricks.contruct_level()
+    bricks.construct_level(levels.sequence[levels.current_level])
     walls.construct_walls()
 end
 
@@ -334,6 +384,7 @@ function love.update(dt)
     bricks.update()
     walls.update()
     collisions.resolve_collisions()
+    levels.switch_to_next_level(bricks)
 end
 
 function love.draw()
@@ -341,6 +392,12 @@ function love.draw()
     platform.draw()
     bricks.draw()
     walls.draw()
+    if levels.gamefinished then
+        love.graphics.printf( "Congratulations!\n" ..
+            "You have finished the game!",
+            300, 250, 200, "center"
+        )
+    end
 end
 
 function love.keyreleased(key)
