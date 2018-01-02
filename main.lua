@@ -68,7 +68,7 @@ function collisions.check_rectangles_overlap(a, b)
             shift_b_x = a.x - (b.x + b.width)
         end
         if (a.y + a.height / 2) < (b.y + b.height / 2) then
-            shift_b_y = (a.y + a.height) - b.x
+            shift_b_y = (a.y + a.height) - b.y
         else
             shift_b_y = a.y - (b.y + b.height)
         end
@@ -97,6 +97,7 @@ function collisions.ball_platform_collision(ball, platform)
 end
 
 function collisions.ball_walls_collision(ball, walls)
+    local overlap, shift_ball_x, shift_ball_y
     a = {
         x = ball.position_x - ball.radius,
         y = ball.position_y - ball.radius,
@@ -110,8 +111,9 @@ function collisions.ball_walls_collision(ball, walls)
             width = wall.width,
             height = wall.height
         }
-        if collisions.check_rectangles_overlap(a, b) then
-            print("Ball-Wall collision")
+        overlap, shift_ball_x, shift_ball_y = collisions.check_rectangles_overlap(b, a)
+        if overlap then
+            ball.rebound(shift_ball_x, shift_ball_y)
         end
     end
 end
