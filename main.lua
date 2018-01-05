@@ -30,10 +30,11 @@ walls.wall_thickness = 20
 walls.current_level_walls = {}
 
 local levels = {}
-levels.sequence = {}
+levels.sequence_table = {}
+levels.sequence_string = {}
 levels.current_level = 1
 levels.game_finished = false
-levels.sequence[1] = {
+levels.sequence_table[1] = {
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
    { 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1 },
@@ -44,7 +45,7 @@ levels.sequence[1] = {
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 }
 
-levels.sequence[2] = {
+levels.sequence_table[2] = {
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
    { 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1 },
@@ -54,6 +55,28 @@ levels.sequence[2] = {
    { 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1 },
    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 }
+
+levels.sequence_string[1] = [[
+___________
+
+# # ### # #
+# # #   # #
+### ##   #
+# # #    #
+# # ###  #
+___________
+]]
+
+levels.sequence_string[2] = [[
+___________
+
+##  # # ###
+# # # # #
+###  #  ##
+# #  #  #
+###  #  ###
+___________
+]]
 
 function collisions.resolve_collisions()
     collisions.ball_platform_collision(ball, platform)
@@ -202,7 +225,7 @@ function collisions.platform_walls_collision(platform, walls)
     end
 end
 
-function bricks.construct_level(level_bricks_arrangement)
+function bricks.construct_level_from_table(level_bricks_arrangement)
     bricks.no_more_bricks = false
     for row_index, row in ipairs(level_bricks_arrangement) do
         for col_index, brick_type in ipairs(row) do
@@ -212,7 +235,27 @@ function bricks.construct_level(level_bricks_arrangement)
                 local new_brick_position_y = bricks.top_left_position_y + (row_index - 1)
                     * (bricks.brick_height + bricks.vertical_distance)
                 local new_brick = bricks.new_brick(new_brick_position_x, new_brick_position_y)
-                bricks.add_to_current_level_bricks( new_brick )
+                bricks.add_to_current_level_bricks(new_brick)
+            end
+        end
+    end
+end
+
+function bricks.construct_level_from_string(level_bricks_arrangement)
+    bricks.no_more_bricks = false
+    local row_index = 0
+    for row in level_bricks_arrangement:gmatch('(.-)\n') do
+        row_index = row_index + 1
+        local col_index = 0
+        for brick_type in row:gmatch('.') do
+            col_index = col_index + 1
+            if brick_type == "#" then
+                local new_brick_position_x = bricks.top_left_position_x + (col_index - 1)
+                    * (bricks.brick_width + bricks.horizontal_distance)
+                local new_brick_position_y = bricks.top_left_position_y + (row_index - 1)
+                    * (bricks.brick_height + bricks.vertical_distance)
+                local new_brick = bricks.new_brick(new_brick_position_x, new_brick_position_y)
+                bricks.add_to_current_level_bricks(new_brick)
             end
         end
     end
@@ -363,9 +406,9 @@ end
 
 function levels.switch_to_next_level(bricks)
     if bricks.no_more_bricks then
-        if levels.current_level < #levels.sequence then
+        if levels.current_level < #levels.sequence_string then
             levels.current_level = levels.current_level + 1
-            bricks.construct_level(levels.sequence[levels.current_level])
+            bricks.construct_level_from_string(levels.sequence_string[levels.current_level])
             ball.reposition()
         end
     else
@@ -374,7 +417,7 @@ function levels.switch_to_next_level(bricks)
 end
 
 function love.load()
-    bricks.construct_level(levels.sequence[levels.current_level])
+    bricks.construct_level_from_string(levels.sequence_string[levels.current_level])
     walls.construct_walls()
 end
 
