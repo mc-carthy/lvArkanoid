@@ -84,8 +84,8 @@ function collisions.ball_bricks_collision(ball, bricks)
     }
     for i, brick in pairs(bricks.current_level_bricks) do
         b = {
-            x = brick.position_x,
-            y = brick.position_y,
+            x = brick.position.x,
+            y = brick.position.y,
             width = brick.width,
             height = brick.height
         }

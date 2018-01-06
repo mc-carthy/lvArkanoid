@@ -39,4 +39,7 @@ function love.keyreleased(key)
    if key == 'escape' then
       love.event.quit()
    end
+   if key == "c" then
+       Bricks.clear_all_bricks()
+   end
 end
