@@ -35,29 +35,4 @@ function levels.require_current_level_from_file()
     return level
 end
 
-function levels.switch_to_next_level_table(bricks)
-    if bricks.no_more_bricks then
-        if levels.current_level < #levels.sequence_string then
-            levels.current_level = levels.current_level + 1
-            level = levels.require_current_level_from_file()
-            bricks.construct_level_from_table(level)
-            ball.reposition()
-        end
-    else
-        levels.game_finished = true
-    end
-end
-
-function levels.switch_to_next_level_string(bricks)
-    if bricks.no_more_bricks then
-        if levels.current_level < #levels.sequence_string then
-            levels.current_level = levels.current_level + 1
-            bricks.construct_level_from_string(levels.sequence_string[levels.current_level])
-            ball.reposition()
-        end
-    else
-        levels.game_finished = true
-    end
-end
-
 return levels

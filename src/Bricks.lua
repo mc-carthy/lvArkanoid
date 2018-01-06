@@ -10,6 +10,7 @@ bricks.horizontal_distance = 10
 bricks.vertical_distance = 15
 bricks.brick_width = 50
 bricks.brick_height = 30
+bricks.no_more_bricks = false
 
 function bricks.clear_all_bricks()
     for i in pairs( bricks.current_level_bricks ) do
