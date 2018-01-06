@@ -1,9 +1,9 @@
+local vector = require("src.Vector2")
+
 local ball = {}
 
-ball.position_x = 300
-ball.position_y = 300
-ball.speed_x = 500
-ball.speed_y = 500
+ball.position = vector(200, 500)
+ball.speed = vector(700, 700)
 ball.radius = 10
 
 function ball.rebound(shift_ball_x, shift_ball_y)
@@ -15,33 +15,32 @@ function ball.rebound(shift_ball_x, shift_ball_y)
         shift_ball_x = 0
     end
 
-    ball.position_x = ball.position_x + shift_ball_x
-    ball.position_y = ball.position_y + shift_ball_y
+    ball.position.x = ball.position.x + shift_ball_x
+    ball.position.y = ball.position.y + shift_ball_y
 
     if shift_ball_x ~= 0 then
-        ball.speed_x = -ball.speed_x
+        ball.speed.x = -ball.speed.x
     end
     if shift_ball_y ~= 0 then
-        ball.speed_y = -ball.speed_y
+        ball.speed.y = -ball.speed.y
     end
 end
 
 function ball.reposition()
-   ball.position_x = 200
-   ball.position_y = 500
+   ball.position.x = 200
+   ball.position.y = 500
 end
 
 function ball.update(dt)
-    ball.position_x = ball.position_x + ball.speed_x * dt
-    ball.position_y = ball.position_y + ball.speed_y * dt
+    ball.position = ball.position + ball.speed * dt
 end
 
 function ball.draw()
     local circleSegments = 16
     love.graphics.circle(
         "line",
-        ball.position_x,
-        ball.position_y,
+        ball.position.x,
+		ball.position.y,
         ball.radius,
         circleSegments
     )

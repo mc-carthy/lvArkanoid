@@ -35,8 +35,8 @@ end
 
 function collisions.ball_platform_collision(ball, platform)
     a = {
-        x = ball.position_x - ball.radius,
-        y = ball.position_y - ball.radius,
+        x = ball.position.x - ball.radius,
+        y = ball.position.y - ball.radius,
         width = ball.radius * 2,
         height = ball.radius * 2
     }
@@ -55,8 +55,8 @@ end
 function collisions.ball_walls_collision(ball, walls)
     local overlap, shift_ball_x, shift_ball_y
     a = {
-        x = ball.position_x - ball.radius,
-        y = ball.position_y - ball.radius,
+        x = ball.position.x - ball.radius,
+        y = ball.position.y - ball.radius,
         width = ball.radius * 2,
         height = ball.radius * 2
     }
@@ -77,8 +77,8 @@ end
 function collisions.ball_bricks_collision(ball, bricks)
     local overlap, shift_ball_x, shift_ball_y
     a = {
-        x = ball.position_x - ball.radius,
-        y = ball.position_y - ball.radius,
+        x = ball.position.x - ball.radius,
+        y = ball.position.y - ball.radius,
         width = ball.radius * 2,
         height = ball.radius * 2
     }
