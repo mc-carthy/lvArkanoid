@@ -8,7 +8,8 @@ local Walls = require("src.Walls")
 -- TODO: Initialise instance of modules and reference them instead of directly referencing modules
 
 function love.load()
-    Bricks.construct_level_from_string(Levels.sequence_string[Levels.current_level])
+    level = Levels.require_current_level_from_file()
+    Bricks.construct_level_from_table(level)
     Walls.construct_walls()
 end
 
@@ -18,7 +19,7 @@ function love.update(dt)
     Bricks.update()
     Walls.update()
     Collisions.resolve_collisions()
-    Levels.switch_to_next_level(Bricks)
+    Levels.switch_to_next_level_table(Bricks)
 end
 
 function love.draw()

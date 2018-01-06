@@ -3,7 +3,7 @@ local vector = require("src.Vector2")
 local ball = {}
 
 ball.position = vector(200, 500)
-ball.speed = vector(700, 700)
+ball.speed = vector(1000, 1000)
 ball.radius = 10
 
 function ball.rebound(shift_ball_x, shift_ball_y)
@@ -27,8 +27,7 @@ function ball.rebound(shift_ball_x, shift_ball_y)
 end
 
 function ball.reposition()
-   ball.position.x = 200
-   ball.position.y = 500
+   ball.position = vector(200, 500)
 end
 
 function ball.update(dt)
