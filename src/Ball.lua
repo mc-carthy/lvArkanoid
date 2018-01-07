@@ -19,22 +19,22 @@ ball.quad = love.graphics.newQuad(
 ball.radius = ball.tile_width / 2
 ball.escaped_screen = false
 
-function ball.rebound(shift_ball_x, shift_ball_y)
-    local min_shift = math.min(math.abs(shift_ball_x), math.abs(shift_ball_y))
+function ball.rebound(shift_ball)
+    local min_shift = math.min(math.abs(shift_ball.x), math.abs(shift_ball.y))
 
-    if math.abs(shift_ball_x) == min_shift then
-        shift_ball_y = 0
+    if math.abs(shift_ball.x) == min_shift then
+        shift_ball.y = 0
     else
-        shift_ball_x = 0
+        shift_ball.x = 0
     end
 
-    ball.position.x = ball.position.x + shift_ball_x
-    ball.position.y = ball.position.y + shift_ball_y
+    ball.position.x = ball.position.x + shift_ball.x
+    ball.position.y = ball.position.y + shift_ball.y
 
-    if shift_ball_x ~= 0 then
+    if shift_ball.x ~= 0 then
         ball.speed.x = -ball.speed.x
     end
-    if shift_ball_y ~= 0 then
+    if shift_ball.y ~= 0 then
         ball.speed.y = -ball.speed.y
     end
 end

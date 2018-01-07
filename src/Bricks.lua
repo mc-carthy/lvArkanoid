@@ -74,7 +74,7 @@ function bricks.weaken_brick(brick)
     brick.quad = bricks.brick_type_to_quad(brick.brick_type)
 end
 
-function bricks.brick_hit_by_ball(i, brick, shift_ball_x, shift_ball_y)
+function bricks.brick_hit_by_ball(i, brick, shift_ball)
     if bricks.is_simple(brick) then
         table.remove(bricks.current_level_bricks, i)
         simple_break_sound:play()
