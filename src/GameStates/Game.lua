@@ -23,6 +23,7 @@ end
 
 function game.switch_to_next_level(bricks, ball, levels)
     if bricks.no_more_bricks then
+        bricks.clear_all_bricks()
         if levels.current_level < #levels.sequence_table then
             GameState.set_state("Game", { current_level = levels.current_level + 1 })
         else

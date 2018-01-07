@@ -133,13 +133,16 @@ function bricks.new_brick(position, brick_type, width, height)
 end
 
 function bricks.update()
-    if #bricks.current_level_bricks == 0 then
-        bricks.no_more_bricks = true
-    else
-        for _, brick in pairs(bricks.current_level_bricks) do
-            bricks.update_brick(brick)
+    local no_more_bricks = true
+    for _, brick in pairs(bricks.current_level_bricks) do
+        if bricks.is_heavy_armored(brick) then
+            no_more_bricks = no_more_bricks and true
+        else
+            no_more_bricks = no_more_bricks and false
         end
+        bricks.update_brick(brick)
     end
+    bricks.no_more_bricks = no_more_bricks
 end
 
 function bricks.update_brick(brick)
