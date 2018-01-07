@@ -53,14 +53,16 @@ function ball.draw()
         ball.position.y - ball.radius
     )
 
-    local circleSegments = 16
-    love.graphics.circle(
-        "line",
-        ball.position.x,
-		ball.position.y,
-        ball.radius,
-        circleSegments
-    )
+    if DEBUG then
+        local circleSegments = 16
+        love.graphics.circle(
+            "line",
+            ball.position.x,
+    		ball.position.y,
+            ball.radius,
+            circleSegments
+        )
+    end
 end
 
 return ball

@@ -50,13 +50,16 @@ function platform.draw()
         platform.position.x,
         platform.position.y
     )
-    love.graphics.rectangle(
-        "line",
-        platform.position.x,
-        platform.position.y,
-        platform.width,
-        platform.height
-    )
+
+    if DEBUG then
+        love.graphics.rectangle(
+            "line",
+            platform.position.x,
+            platform.position.y,
+            platform.width,
+            platform.height
+        )
+    end
 end
 
 return platform

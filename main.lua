@@ -1,5 +1,7 @@
 GameState = require("src.GameState")
 
+DEBUG = false
+
 function love.load()
     GameState.set_state("Menu")
 end

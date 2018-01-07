@@ -29,14 +29,53 @@ function bricks.brick_type_to_quad(brick_type)
     )
 end
 
+function bricks.is_simple(brick)
+    local row = math.floor(brick.brick_type / 10)
+    return row == 1
+end
+
+function bricks.is_armored(brick)
+    local row = math.floor(brick.brick_type / 10)
+    return row == 2
+end
+
+function bricks.is_scratched(brick)
+    local row = math.floor(brick.brick_type / 10)
+    return row == 3
+end
+
+function bricks.is_cracked(brick)
+    local row = math.floor(brick.brick_type / 10)
+    return row == 4
+end
+
+function bricks.is_heavy_armored(brick)
+    local row = math.floor(brick.brick_type / 10)
+    return row == 5
+end
+
 function bricks.clear_all_bricks()
     for i in pairs( bricks.current_level_bricks ) do
         bricks.current_level_bricks[i] = nil
     end
 end
 
+function bricks.weaken_brick(brick)
+    brick.brick_type = brick.brick_type + 10
+    brick.quad = bricks.brick_type_to_quad(brick.brick_type)
+end
+
 function bricks.brick_hit_by_ball(i, brick, shift_ball_x, shift_ball_y)
-    table.remove(bricks.current_level_bricks, i)
+    if bricks.is_simple(brick) then
+        table.remove(bricks.current_level_bricks, i)
+    elseif bricks.is_armored(brick) then
+        bricks.weaken_brick(brick)
+    elseif bricks.is_scratched(brick) then
+        bricks.weaken_brick(brick)
+    elseif bricks.is_cracked(brick) then
+        table.remove(bricks.current_level_bricks, i)
+    elseif bricks.is_heavy_armored(brick) then
+    end
 end
 
 function bricks.construct_level_from_table(level_bricks_arrangement)
@@ -121,31 +160,15 @@ function bricks.draw_brick(brick)
         )
     end
 
-    -- love.graphics.rectangle(
-    --     'line',
-    --     brick.position.x,
-    --     brick.position.y,
-    --     brick.width,
-    --     brick.height
-    -- )
-
-    -- local r, g, b, a = love.graphics.getColor()
-    -- if brick.brick_type == 1 then
-    --    love.graphics.setColor(255, 0, 0, 100)
-    -- elseif brick.brick_type == 2 then
-    --    love.graphics.setColor(0, 255, 0, 100)
-    -- elseif brick.brick_type == 3 then
-    --    love.graphics.setColor(0, 0, 255, 100)
-    -- end
-    --
-    -- love.graphics.rectangle(
-    --     'fill',
-    --     brick.position.x,
-    --     brick.position.y,
-    --     brick.width,
-    --     brick.height
-    -- )
-    -- love.graphics.setColor(r, g, b, a)
+    if DEBUG then
+        love.graphics.rectangle(
+            'line',
+            brick.position.x,
+            brick.position.y,
+            brick.width,
+            brick.height
+        )
+    end
 end
 
 return bricks
