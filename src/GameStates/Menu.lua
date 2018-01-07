@@ -1,5 +1,9 @@
 local menu = {}
 
+function menu.load()
+    music:play()
+end
+
 function menu.update(dt)
 end
 

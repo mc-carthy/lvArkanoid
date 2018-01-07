@@ -19,6 +19,12 @@ function game.enter(prev_state, ...)
         Bricks.construct_level_from_table(level)
         Ball.reposition()
     end
+    if prev_state == "GamePaused" then
+        music:resume()
+    end
+    if prev_state == "GameFinished" then
+        music:rewind()
+    end
 end
 
 function game.switch_to_next_level(bricks, ball, levels)
@@ -50,6 +56,7 @@ end
 
 function game.keyreleased(key)
     if key == "escape" then
+        music:pause()
         GameState.set_state("GamePaused", { ball, platform, bricks, walls })
     end
     if key == "c" then

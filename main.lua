@@ -1,6 +1,8 @@
 GameState = require("src.GameState")
 
 DEBUG = false
+music = love.audio.newSource("src/Assets/Music/S31-Night Prowler.ogg")
+music:setLooping(true)
 
 function love.load()
     GameState.set_state("Menu")
