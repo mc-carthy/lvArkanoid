@@ -43,8 +43,8 @@ end
 function game.draw()
     Ball.draw()
     Platform.draw()
-    Bricks.draw()
     Walls.draw()
+    Bricks.draw()
 end
 
 function game.keyreleased(key)

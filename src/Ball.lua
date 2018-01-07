@@ -4,7 +4,19 @@ local ball = {}
 
 ball.position = vector(200, 500)
 ball.speed = vector(1000, 1000)
-ball.radius = 10
+ball.image = love.graphics.newImage("src/Images/800x600/ball.png")
+ball.x_tile_pos = 0
+ball.y_tile_pos = 0
+ball.tile_width = 18
+ball.tile_height = 18
+ball.tileset_width = 18
+ball.tileset_height = 18
+ball.quad = love.graphics.newQuad(
+    ball.x_tile_pos, ball.y_tile_pos,
+    ball.tile_width, ball.tile_height,
+    ball.tileset_width, ball.tileset_height
+)
+ball.radius = ball.tile_width / 2
 
 function ball.rebound(shift_ball_x, shift_ball_y)
     local min_shift = math.min(math.abs(shift_ball_x), math.abs(shift_ball_y))
@@ -35,6 +47,12 @@ function ball.update(dt)
 end
 
 function ball.draw()
+    love.graphics.draw(
+        ball.image, ball.quad,
+        ball.position.x - ball.radius,
+        ball.position.y - ball.radius
+    )
+
     local circleSegments = 16
     love.graphics.circle(
         "line",

@@ -3,14 +3,31 @@ local vector = require("src.Vector2")
 local bricks = {}
 
 bricks.current_level_bricks = {}
+bricks.image = love.graphics.newImage("src/Images/800x600/bricks.png")
+bricks.tile_width = 64
+bricks.tile_height = 32
+bricks.tileset_width = 384
+bricks.tileset_height = 160
 bricks.columns = 11
 bricks.rows = 8
-bricks.top_left_position = vector(70, 50)
-bricks.horizontal_distance = 10
-bricks.vertical_distance = 15
-bricks.brick_width = 50
-bricks.brick_height = 30
+bricks.top_left_position = vector(47, 34)
+bricks.horizontal_distance = 0
+bricks.vertical_distance = 0
+bricks.brick_width = bricks.tile_width
+bricks.brick_height = bricks.tile_height
 bricks.no_more_bricks = false
+
+function bricks.brick_type_to_quad(brick_type)
+    local row = math.floor(brick_type / 10)
+    local col = brick_type % 10
+    local x_pos = bricks.tile_width * (col - 1)
+    local y_pos = bricks.tile_height * (row - 1)
+    return love.graphics.newQuad(
+        x_pos, y_pos,
+        bricks.tile_width, bricks.tile_height,
+        bricks.tileset_width, bricks.tileset_height
+    )
+end
 
 function bricks.clear_all_bricks()
     for i in pairs( bricks.current_level_bricks ) do
@@ -71,7 +88,8 @@ function bricks.new_brick(position, brick_type, width, height)
         position = position,
         brick_type = brick_type,
         width = width or bricks.brick_width,
-        height = height or bricks.brick_height
+        height = height or bricks.brick_height,
+        quad = bricks.brick_type_to_quad(brick_type)
     }
 end
 
@@ -95,31 +113,39 @@ function bricks.draw()
 end
 
 function bricks.draw_brick(brick)
-    love.graphics.rectangle(
-        'line',
-        brick.position.x,
-        brick.position.y,
-        brick.width,
-        brick.height
-    )
-
-    local r, g, b, a = love.graphics.getColor()
-    if brick.brick_type == 1 then
-       love.graphics.setColor(255, 0, 0, 100)
-    elseif brick.brick_type == 2 then
-       love.graphics.setColor(0, 255, 0, 100)
-    elseif brick.brick_type == 3 then
-       love.graphics.setColor(0, 0, 255, 100)
+    if brick.quad then
+        love.graphics.draw(
+            bricks.image, brick.quad,
+            brick.position.x,
+            brick.position.y
+        )
     end
 
-    love.graphics.rectangle(
-        'fill',
-        brick.position.x,
-        brick.position.y,
-        brick.width,
-        brick.height
-    )
-    love.graphics.setColor(r, g, b, a)
+    -- love.graphics.rectangle(
+    --     'line',
+    --     brick.position.x,
+    --     brick.position.y,
+    --     brick.width,
+    --     brick.height
+    -- )
+
+    -- local r, g, b, a = love.graphics.getColor()
+    -- if brick.brick_type == 1 then
+    --    love.graphics.setColor(255, 0, 0, 100)
+    -- elseif brick.brick_type == 2 then
+    --    love.graphics.setColor(0, 255, 0, 100)
+    -- elseif brick.brick_type == 3 then
+    --    love.graphics.setColor(0, 0, 255, 100)
+    -- end
+    --
+    -- love.graphics.rectangle(
+    --     'fill',
+    --     brick.position.x,
+    --     brick.position.y,
+    --     brick.width,
+    --     brick.height
+    -- )
+    -- love.graphics.setColor(r, g, b, a)
 end
 
 return bricks

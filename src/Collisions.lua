@@ -41,8 +41,8 @@ function collisions.ball_platform_collision(ball, platform)
         height = ball.radius * 2
     }
     b = {
-        x = platform.position_x,
-        y = platform.position_y,
+        x = platform.position.x,
+        y = platform.position.y,
         width = platform.width,
         height = platform.height
     }
@@ -62,8 +62,8 @@ function collisions.ball_walls_collision(ball, walls)
     }
     for _, wall in pairs(walls.current_level_walls) do
         b = {
-            x = wall.position_x,
-            y = wall.position_y,
+            x = wall.position.x,
+            y = wall.position.y,
             width = wall.width,
             height = wall.height
         }
@@ -100,15 +100,15 @@ end
 function collisions.platform_walls_collision(platform, walls)
     local overlap, shift_platform_x, shift_platform_y
     a = {
-        x = platform.position_x,
-        y = platform.position_y,
+        x = platform.position.x,
+        y = platform.position.y,
         width = platform.width,
         height = platform.height
     }
     for _, wall in pairs(walls.current_level_walls) do
         b = {
-            x = wall.position_x,
-            y = wall.position_y,
+            x = wall.position.x,
+            y = wall.position.y,
             width = wall.width,
             height = wall.height
         }
