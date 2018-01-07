@@ -4,6 +4,7 @@ local Collisions = require("src.Collisions")
 local Levels = require("src.Levels")
 local Platform = require("src.Platform")
 local Walls = require("src.Walls")
+local LivesDisplay = require("src.LivesDisplay")
 
 local game = {}
 
@@ -22,8 +23,20 @@ function game.enter(prev_state, ...)
     if prev_state == "GamePaused" then
         music:resume()
     end
-    if prev_state == "GameFinished" then
+    if prev_state == "GameOver" or prev_state == "GameFinished" then
+        lives_display.reset()
         music:rewind()
+    end
+end
+
+function game.check_no_more_balls(ball, lives_display)
+    if ball.escaped_screen then
+        lives_display.lose_life()
+        if lives_display.lives < 0 then
+            GameState.set_state("GameOver", { Ball, Platform, Bricks, Walls, LivesDisplay })
+        else
+            ball.reposition()
+        end
     end
 end
 
@@ -44,6 +57,7 @@ function game.update(dt)
     Bricks.update()
     Walls.update()
     Collisions.resolve_collisions()
+    game.check_no_more_balls(Ball, LivesDisplay)
     game.switch_to_next_level(Bricks, Ball, Levels)
 end
 
@@ -52,12 +66,13 @@ function game.draw()
     Platform.draw()
     Walls.draw()
     Bricks.draw()
+    LivesDisplay.draw()
 end
 
 function game.keyreleased(key)
     if key == "escape" then
         music:pause()
-        GameState.set_state("GamePaused", { ball, platform, bricks, walls })
+        GameState.set_state("GamePaused", { Ball, Platform, Bricks, Walls, LivesDisplay })
     end
     if key == "c" then
         Bricks.clear_all_bricks()

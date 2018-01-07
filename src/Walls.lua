@@ -32,7 +32,7 @@ function walls.construct_walls()
     walls.current_level_walls["left"] = left_wall
     walls.current_level_walls["right"] = right_wall
     walls.current_level_walls["top"] = top_wall
-    walls.current_level_walls["bottom"] = bottom_wall
+    -- walls.current_level_walls["bottom"] = bottom_wall
 end
 
 function walls.new_wall(position, width, height)

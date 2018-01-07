@@ -3,7 +3,7 @@ local vector = require("src.Vector2")
 local ball = {}
 
 ball.position = vector(200, 500)
-ball.speed = vector(1000, 1000)
+ball.speed = vector(-300, -300)
 ball.image = love.graphics.newImage("src/Assets/Images/800x600/ball.png")
 ball.x_tile_pos = 0
 ball.y_tile_pos = 0
@@ -17,6 +17,7 @@ ball.quad = love.graphics.newQuad(
     ball.tileset_width, ball.tileset_height
 )
 ball.radius = ball.tile_width / 2
+ball.escaped_screen = false
 
 function ball.rebound(shift_ball_x, shift_ball_y)
     local min_shift = math.min(math.abs(shift_ball_x), math.abs(shift_ball_y))
@@ -39,11 +40,22 @@ function ball.rebound(shift_ball_x, shift_ball_y)
 end
 
 function ball.reposition()
-   ball.position = vector(200, 500)
+    ball.escaped_screen = false
+    ball.speed = vector(-300, -300)
+    ball.position = vector(200, 500)
+end
+
+function ball.check_escape_from_screen()
+   local x, y = ball.position:unpack()
+   local ball_top = y - ball.radius
+   if ball_top > love.graphics.getHeight() then
+      ball.escaped_screen = true
+   end
 end
 
 function ball.update(dt)
     ball.position = ball.position + ball.speed * dt
+    ball.check_escape_from_screen()
 end
 
 function ball.draw()
