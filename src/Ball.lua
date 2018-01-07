@@ -4,7 +4,7 @@ local ball = {}
 
 ball.position = vector(200, 500)
 ball.speed = vector(1000, 1000)
-ball.image = love.graphics.newImage("src/Images/800x600/ball.png")
+ball.image = love.graphics.newImage("src/Assets/Images/800x600/ball.png")
 ball.x_tile_pos = 0
 ball.y_tile_pos = 0
 ball.tile_width = 18

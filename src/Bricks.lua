@@ -2,8 +2,17 @@ local vector = require("src.Vector2")
 
 local bricks = {}
 
+local simple_break_sound = love.audio.newSource(
+   "src/Assets/SFX/recordered_glass_norm.ogg", "static")
+local armored_hit_sound = love.audio.newSource(
+   "src/Assets/SFX//qubodupImpactMetal_short_norm.ogg", "static")
+local armored_break_sound = love.audio.newSource(
+   "src/Assets/SFX//armored_glass_break_short_norm.ogg", "static")
+local ball_heavy_armored_sound = love.audio.newSource(
+   "src/Assets/SFX//cast_iron_clangs_11_short_norm.ogg", "static")
+
 bricks.current_level_bricks = {}
-bricks.image = love.graphics.newImage("src/Images/800x600/bricks.png")
+bricks.image = love.graphics.newImage("src/Assets/Images/800x600/bricks.png")
 bricks.tile_width = 64
 bricks.tile_height = 32
 bricks.tileset_width = 384
@@ -68,13 +77,18 @@ end
 function bricks.brick_hit_by_ball(i, brick, shift_ball_x, shift_ball_y)
     if bricks.is_simple(brick) then
         table.remove(bricks.current_level_bricks, i)
+        simple_break_sound:play()
     elseif bricks.is_armored(brick) then
         bricks.weaken_brick(brick)
+        armored_hit_sound:play()
     elseif bricks.is_scratched(brick) then
         bricks.weaken_brick(brick)
+        armored_hit_sound:play()
     elseif bricks.is_cracked(brick) then
         table.remove(bricks.current_level_bricks, i)
+        armored_break_sound:play()
     elseif bricks.is_heavy_armored(brick) then
+        ball_heavy_armored_sound:play()
     end
 end
 

@@ -4,7 +4,7 @@ local platform = {}
 
 platform.position = vector(300, 500)
 platform.speed = vector(800, 0)
-platform.image = love.graphics.newImage("src/Images/800x600/platform.png")
+platform.image = love.graphics.newImage("src/Assets/Images/800x600/platform.png")
 platform.small_tile_width = 75
 platform.small_tile_height = 16
 platform.small_tile_x_pos = 0
