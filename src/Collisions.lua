@@ -49,7 +49,7 @@ function collisions.ball_platform_collision(ball, platform)
     }
     overlap, shift_ball = collisions.check_rectangles_overlap(b, a)
     if overlap then
-        ball.rebound(shift_ball)
+        ball.platform_rebound(shift_ball, platform)
     end
 end
 
@@ -70,7 +70,7 @@ function collisions.ball_walls_collision(ball, walls)
         }
         overlap, shift_ball = collisions.check_rectangles_overlap(b, a)
         if overlap then
-            ball.rebound(shift_ball)
+            ball.wall_rebound(shift_ball)
         end
     end
 end
@@ -92,7 +92,7 @@ function collisions.ball_bricks_collision(ball, bricks)
         }
         overlap, shift_ball = collisions.check_rectangles_overlap(b, a)
         if overlap then
-            ball.rebound(shift_ball)
+            ball.brick_rebound(shift_ball)
             bricks.brick_hit_by_ball(i, brick, shift_ball.x, shift_ball.y)
         end
     end

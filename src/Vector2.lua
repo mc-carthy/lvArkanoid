@@ -72,7 +72,8 @@ function vector.__unm(a)
 end
 
 function vector.__add(a,b)
-	assert(isvector(a) and isvector(b), "Add: wrong argument types (<vector> expected)")
+	assert(isvector(a), "Add: wrong first argument types (<vector> expected)")
+    assert(isvector(b), "Add: wrong second argument types (<vector> expected)")
 	return new(a.x+b.x, a.y+b.y)
 end
 
