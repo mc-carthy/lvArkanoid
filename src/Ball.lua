@@ -2,8 +2,13 @@ local vector = require("src.Vector2")
 
 local ball = {}
 
+local ball_x_shift = 0
+local platform_height = 16
+local platform_starting_pos = vector(300, 500)
+local first_launch_speed = vector(-150, -300)
+
 ball.position = vector(200, 500)
-ball.speed = vector(-300, -300)
+ball.speed = vector(0, 0)
 ball.image = love.graphics.newImage("src/Assets/Images/800x600/ball.png")
 ball.x_tile_pos = 0
 ball.y_tile_pos = 0
@@ -19,6 +24,11 @@ ball.quad = love.graphics.newQuad(
 ball.radius = ball.tile_width / 2
 ball.escaped_screen = false
 ball.collision_counter = 0
+ball.stuck_to_platform = true
+ball.separation_from_platform_center = vector(
+   ball_x_shift, -1 * platform_height / 2 - ball.radius - 1
+)
+ball.position = platform_starting_pos + ball.separation_from_platform_center
 
 function ball.normal_rebound(shift_ball)
     local min_shift = math.min(math.abs(shift_ball.x), math.abs(shift_ball.y))
@@ -122,8 +132,9 @@ end
 
 function ball.reposition()
     ball.escaped_screen = false
-    ball.speed = vector(-300, -300)
-    ball.position = vector(200, 500)
+    ball.speed = vector(0, 0)
+    ball.stuck_to_platform = true
+    ball.collision_counter = 0
 end
 
 function ball.check_escape_from_screen()
@@ -134,8 +145,23 @@ function ball.check_escape_from_screen()
    end
 end
 
-function ball.update(dt)
+function ball.follow_platform(platform)
+    local platform_centre = vector(platform.position.x + platform.width / 2, platform.position.y + platform.height / 2)
+    ball.position = platform_centre + ball.separation_from_platform_center
+end
+
+function ball.launch_from_platform()
+    if ball.stuck_to_platform then
+       ball.stuck_to_platform = false
+       ball.speed = first_launch_speed:clone()
+    end
+end
+
+function ball.update(dt, platform)
     ball.position = ball.position + ball.speed * dt
+    if ball.stuck_to_platform then
+        ball.follow_platform(platform)
+    end
     ball.check_escape_from_screen()
 end
 

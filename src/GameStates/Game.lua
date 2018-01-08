@@ -52,7 +52,7 @@ function game.switch_to_next_level(bricks, ball, levels)
 end
 
 function game.update(dt)
-    Ball.update(dt)
+    Ball.update(dt, Platform)
     Platform.update(dt)
     Bricks.update()
     Walls.update()
@@ -76,6 +76,9 @@ function game.keyreleased(key)
     end
     if key == "c" then
         Bricks.clear_all_bricks()
+    end
+    if key == "space" then
+        Ball.launch_from_platform()
     end
 end
 
