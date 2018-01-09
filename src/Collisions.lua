@@ -2,6 +2,7 @@ local ball = require("src.Ball")
 local platform = require("src.Platform")
 local walls = require("src.Walls")
 local bricks = require("src.Bricks")
+local bonuses = require("src.Bonuses")
 local vector = require("src.Vector2")
 
 local collisions = {}
@@ -9,7 +10,7 @@ local collisions = {}
 function collisions.resolve_collisions()
     collisions.ball_platform_collision(ball, platform)
     collisions.ball_walls_collision(ball, walls)
-    collisions.ball_bricks_collision(ball, bricks)
+    collisions.ball_bricks_collision(ball, bricks, bonuses)
     collisions.platform_walls_collision(platform, walls)
 end
 
@@ -93,7 +94,7 @@ function collisions.ball_bricks_collision(ball, bricks)
         overlap, shift_ball = collisions.check_rectangles_overlap(b, a)
         if overlap then
             ball.brick_rebound(shift_ball)
-            bricks.brick_hit_by_ball(i, brick, shift_ball.x, shift_ball.y)
+            bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
         end
     end
 end

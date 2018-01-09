@@ -26,6 +26,17 @@ bricks.brick_width = bricks.tile_width
 bricks.brick_height = bricks.tile_height
 bricks.no_more_bricks = false
 
+function bricks.new_brick(position, brick_type, bonus_type, width, height)
+    return {
+        position = position,
+        brick_type = brick_type,
+        bonus_type = bonus_type,
+        width = width or bricks.brick_width,
+        height = height or bricks.brick_height,
+        quad = bricks.brick_type_to_quad(brick_type)
+    }
+end
+
 function bricks.brick_type_to_quad(brick_type)
     local row = math.floor(brick_type / 10)
     local col = brick_type % 10
@@ -74,8 +85,15 @@ function bricks.weaken_brick(brick)
     brick.quad = bricks.brick_type_to_quad(brick.brick_type)
 end
 
-function bricks.brick_hit_by_ball(i, brick, shift_ball)
+function bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
     if bricks.is_simple(brick) then
+        bonuses.generate_bonus(
+            vector(
+                brick.position.x + brick.width / 2,
+                brick.position.y + brick.height / 2
+            ),
+            brick.bonus_type
+        )
         table.remove(bricks.current_level_bricks, i)
         simple_break_sound:play()
     elseif bricks.is_armored(brick) then
@@ -85,6 +103,13 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball)
         bricks.weaken_brick(brick)
         armored_hit_sound:play()
     elseif bricks.is_cracked(brick) then
+        bonuses.generate_bonus(
+            vector(
+                brick.position.x + brick.width / 2,
+                brick.position.y + brick.height / 2
+            ),
+            brick.bonus_type
+        )
         table.remove(bricks.current_level_bricks, i)
         armored_break_sound:play()
     elseif bricks.is_heavy_armored(brick) then
@@ -92,9 +117,9 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball)
     end
 end
 
-function bricks.construct_level_from_table(level_bricks_arrangement)
+function bricks.construct_level_from_table(level)
     bricks.no_more_bricks = false
-    for row_index, row in ipairs(level_bricks_arrangement) do
+    for row_index, row in ipairs(level.bricks) do
         for col_index, brick_type in ipairs(row) do
             if brick_type ~= 0 then
                 local new_brick_position_x = bricks.top_left_position.x + (col_index - 1)
@@ -105,7 +130,8 @@ function bricks.construct_level_from_table(level_bricks_arrangement)
                     bricks.top_left_position.x + (col_index - 1) * (bricks.brick_width + bricks.horizontal_distance),
                     bricks.top_left_position.y + (row_index - 1) * (bricks.brick_height + bricks.vertical_distance)
                 )
-                local new_brick = bricks.new_brick(new_brick_position, brick_type)
+                local bonus_type = level.bonuses[row_index][col_index]
+                local new_brick = bricks.new_brick(new_brick_position, brick_type, bonus_type)
                 bricks.add_to_current_level_bricks(new_brick)
             end
         end
@@ -134,16 +160,6 @@ end
 
 function bricks.add_to_current_level_bricks(brick)
     table.insert(bricks.current_level_bricks, brick)
-end
-
-function bricks.new_brick(position, brick_type, width, height)
-    return {
-        position = position,
-        brick_type = brick_type,
-        width = width or bricks.brick_width,
-        height = height or bricks.brick_height,
-        quad = bricks.brick_type_to_quad(brick_type)
-    }
 end
 
 function bricks.update()

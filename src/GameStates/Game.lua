@@ -5,6 +5,7 @@ local Levels = require("src.Levels")
 local Platform = require("src.Platform")
 local Walls = require("src.Walls")
 local LivesDisplay = require("src.LivesDisplay")
+local Bonuses = require("src.Bonuses")
 
 local game = {}
 
@@ -56,6 +57,7 @@ function game.update(dt)
     Platform.update(dt)
     Bricks.update()
     Walls.update()
+    Bonuses.update(dt)
     Collisions.resolve_collisions()
     game.check_no_more_balls(Ball, LivesDisplay)
     game.switch_to_next_level(Bricks, Ball, Levels)
@@ -66,6 +68,7 @@ function game.draw()
     Platform.draw()
     Walls.draw()
     Bricks.draw()
+    Bonuses.draw()
     LivesDisplay.draw()
 end
 
