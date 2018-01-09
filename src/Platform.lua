@@ -35,13 +35,31 @@ function platform.bounce_from_wall(shift_platform_x, shift_platform_y)
     platform.position.x = platform.position.x + shift_platform_x
 end
 
+function platform.follow_mouse()
+    local x, y = love.mouse.getPosition()
+    local left_wall_plus_half_platform = 34 + platform.width / 2
+    local right_wall_minus_half_platform = 576 - platform.width / 2
+    if (x > left_wall_plus_half_platform and
+         x < right_wall_minus_half_platform) then
+       platform.position.x = x - platform.width / 2
+    elseif x < left_wall_plus_half_platform then
+       platform.position.x =
+          left_wall_plus_half_platform - platform.width / 2
+    elseif x > right_wall_minus_half_platform then
+       platform.position.x =
+          right_wall_minus_half_platform - platform.width / 2
+    end
+    
+end
+
 function platform.update(dt)
-    if love.keyboard.isDown("right") then
-        platform.position.x = platform.position.x + (platform.speed.x * dt)
-    end
-    if love.keyboard.isDown("left") then
-        platform.position.x = platform.position.x - (platform.speed.x * dt)
-    end
+    platform.follow_mouse()
+    -- if love.keyboard.isDown("right") then
+    --     platform.position.x = platform.position.x + (platform.speed.x * dt)
+    -- end
+    -- if love.keyboard.isDown("left") then
+    --     platform.position.x = platform.position.x - (platform.speed.x * dt)
+    -- end
 end
 
 function platform.draw()

@@ -82,4 +82,16 @@ function game.keyreleased(key)
     end
 end
 
+function game.mousereleased(x, y, button)
+    if button == 1 then
+        Ball.launch_from_platform()
+    elseif button == 2 then
+        music:pause()
+        GameState.set_state(
+            "GamePaused",
+            { Ball, Platform, Bricks, Walls, Lives_display }
+        )
+    end
+end
+
 return game

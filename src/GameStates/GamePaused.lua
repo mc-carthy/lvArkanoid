@@ -18,6 +18,14 @@ function game_paused.keyreleased(key)
     end
 end
 
+function game_paused.mousereleased(x, y, button)
+    if button == 1 then
+        GameState.set_state("Game")
+    elseif button == 2 then
+        love.event.quit()
+    end
+end
+
 function game_paused.draw()
     for _, o in pairs(game_objects) do
         if type(o) == "table" and o.draw then

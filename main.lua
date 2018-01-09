@@ -19,3 +19,7 @@ end
 function love.keyreleased(key)
     GameState.state_event("keyreleased", key)
 end
+
+function love.mousereleased(x, y, button)
+   GameState.state_event("mousereleased", x, y, button)
+end
