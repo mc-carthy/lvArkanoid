@@ -12,6 +12,7 @@ function collisions.resolve_collisions()
     collisions.ball_walls_collision(ball, walls)
     collisions.ball_bricks_collision(ball, bricks, bonuses)
     collisions.platform_walls_collision(platform, walls)
+    collisions.platform_bonuses_collision(platform, bonuses, ball)
 end
 
 function collisions.check_rectangles_overlap(a, b)
@@ -117,6 +118,28 @@ function collisions.platform_walls_collision(platform, walls)
         overlap, shift_platform = collisions.check_rectangles_overlap(b, a)
         if overlap then
             platform.bounce_from_wall(shift_platform.x, shift_platform.y)
+        end
+    end
+end
+
+function collisions.platform_bonuses_collision(platform, bonuses, ball)
+    local overlap
+    local b = {
+        x = platform.position.x,
+        y = platform.position.y,
+        width = platform.width,
+        height = platform.height
+    }
+    for i, bonus in ipairs(bonuses.current_level_bonuses) do
+        local a = {
+            x = bonus.position.x,
+            y = bonus.position.y,
+            width = 2 * bonuses.radius,
+            height = 2 * bonuses.radius
+        }
+        overlap = collisions.check_rectangles_overlap(a, b)
+        if overlap then
+            bonuses.bonus_collected(i, bonus, ball, platform)
         end
     end
 end

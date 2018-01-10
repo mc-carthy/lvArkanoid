@@ -49,7 +49,15 @@ function platform.follow_mouse()
        platform.position.x =
           right_wall_minus_half_platform - platform.width / 2
     end
-    
+
+end
+
+function platform.react_on_increase_bonus()
+
+end
+
+function platform.react_on_decrease_bonus()
+
 end
 
 function platform.update(dt)

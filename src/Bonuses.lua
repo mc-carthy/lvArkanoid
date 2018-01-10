@@ -46,6 +46,39 @@ function bonuses.generate_bonus(position, bonus_type)
     end
 end
 
+function bonuses.bonus_collected(i, bonus, ball, platform)
+    if bonuses.is_decelerate(bonus) then
+        ball.react_on_decelerate_bonus()
+    elseif bonuses.is_accelerate(bonus) then
+        ball.react_on_accelerate_bonus()
+    elseif bonuses.is_increase(bonus) then
+        platform.react_on_increase_bonus()
+    elseif bonuses.is_decrease(bonus) then
+        platform.react_on_decrease_bonus()
+    end
+    table.remove(bonuses.current_level_bonuses, i)
+end
+
+function bonuses.is_decelerate(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 1
+end
+
+function bonuses.is_accelerate(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 5
+end
+
+function bonuses.is_increase(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 3
+end
+
+function bonuses.is_decrease(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 6
+end
+
 function bonuses.valid_bonus_type(bonus_type)
     if bonus_type and bonus_type > 10 and bonus_type < 19 then
         return true

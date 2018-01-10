@@ -145,6 +145,16 @@ function ball.check_escape_from_screen()
    end
 end
 
+function ball.react_on_decelerate_bonus()
+    local speed_difference = 0.7
+    ball.speed = ball.speed * speed_difference
+end
+
+function ball.react_on_accelerate_bonus()
+    local speed_difference = 1.3
+    ball.speed = ball.speed * speed_difference
+end
+
 function ball.follow_platform(platform)
     local platform_centre = vector(platform.position.x + platform.width / 2, platform.position.y + platform.height / 2)
     ball.position = platform_centre + ball.separation_from_platform_center
