@@ -95,6 +95,17 @@ function platform.react_on_decrease_bonus()
     end
 end
 
+function platform.reset_size_to_normal()
+    platform.width = platform.norm_tile_width
+    platform.height = platform.norm_tile_height
+    platform.quad = love.graphics.newQuad(
+        platform.norm_tile_x_pos, platform.norm_tile_y_pos,
+        platform.norm_tile_width, platform.norm_tile_height,
+        platform.tileset_width, platform.tileset_height
+    )
+    platform.size = "normal"
+end
+
 function platform.update(dt)
     platform.follow_mouse()
     -- if love.keyboard.isDown("right") then

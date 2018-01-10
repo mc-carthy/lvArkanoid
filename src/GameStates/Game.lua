@@ -20,6 +20,7 @@ function game.enter(prev_state, ...)
         local level = Levels.require_current_level_from_file()
         Bricks.construct_level_from_table(level)
         Ball.reposition()
+        Platform.reset_size_to_normal()
     end
     if prev_state == "GamePaused" then
         music:resume()
@@ -37,6 +38,7 @@ function game.check_no_more_balls(ball, lives_display)
             GameState.set_state("GameOver", { Ball, Platform, Bricks, Walls, LivesDisplay })
         else
             ball.reposition()
+            Platform.reset_size_to_normal()
         end
     end
 end
