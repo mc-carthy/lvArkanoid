@@ -30,6 +30,7 @@ platform.quad = love.graphics.newQuad(
 )
 platform.width = platform.norm_tile_width
 platform.height = platform.norm_tile_height
+platform.size = "normal"
 
 function platform.bounce_from_wall(shift_platform_x, shift_platform_y)
     platform.position.x = platform.position.x + shift_platform_x
@@ -53,11 +54,45 @@ function platform.follow_mouse()
 end
 
 function platform.react_on_increase_bonus()
-
+   if platform.size == "small" then
+      platform.width = platform.norm_tile_width
+      platform.height = platform.norm_tile_height
+      platform.quad = love.graphics.newQuad(
+         platform.norm_tile_x_pos, platform.norm_tile_y_pos,
+         platform.norm_tile_width, platform.norm_tile_height,
+         platform.tileset_width, platform.tileset_height )
+      platform.size = "normal"
+   elseif platform.size == "normal" then
+      platform.width = platform.large_tile_width
+      platform.height = platform.large_tile_height
+      platform.quad = love.graphics.newQuad(
+         platform.large_tile_x_pos, platform.large_tile_y_pos,
+         platform.large_tile_width, platform.large_tile_height,
+         platform.tileset_width, platform.tileset_height )
+      platform.size = "large"
+   end
 end
 
 function platform.react_on_decrease_bonus()
-
+    if platform.size == "normal" then
+        platform.width = platform.small_tile_width
+        platform.height = platform.small_tile_height
+        platform.quad = love.graphics.newQuad(
+            platform.small_tile_x_pos, platform.small_tile_y_pos,
+            platform.small_tile_width, platform.small_tile_height,
+            platform.tileset_width, platform.tileset_height
+        )
+        platform.size = "small"
+    elseif platform.size == "large" then
+        platform.width = platform.norm_tile_width
+        platform.height = platform.norm_tile_height
+        platform.quad = love.graphics.newQuad(
+            platform.norm_tile_x_pos, platform.norm_tile_y_pos,
+            platform.norm_tile_width, platform.norm_tile_height,
+            platform.tileset_width, platform.tileset_height
+        )
+        platform.size = "normal"
+    end
 end
 
 function platform.update(dt)
