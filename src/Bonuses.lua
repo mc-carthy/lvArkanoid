@@ -47,6 +47,10 @@ function bonuses.generate_bonus(position, bonus_type)
 end
 
 function bonuses.bonus_collected(i, bonus, ball, platform)
+    if not bonuses.is_glue(bonus) then
+        platform.remove_glued_effect()
+        ball.launch_from_platform()
+    end
     if bonuses.is_decelerate(bonus) then
         ball.react_on_decelerate_bonus()
     elseif bonuses.is_accelerate(bonus) then

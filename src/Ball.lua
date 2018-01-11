@@ -30,6 +30,13 @@ ball.separation_from_platform_center = vector(
 )
 ball.position = platform_starting_pos + ball.separation_from_platform_center
 
+local initial_launch_speed_magnitude = 300
+ball.platform_launch_speed_magnitude = initial_launch_speed_magnitude
+local ball_platform_initial_separation = vector(
+   ball_x_shift, -1 * platform_height / 2 - ball.radius - 1
+)
+ball.separation_from_platform_center = ball_platform_initial_separation
+
 function ball.normal_rebound(shift_ball)
     local min_shift = math.min(math.abs(shift_ball.x), math.abs(shift_ball.y))
 
@@ -150,9 +157,10 @@ end
 
 function ball.reposition()
     ball.escaped_screen = false
-    ball.speed = vector(0, 0)
     ball.stuck_to_platform = true
     ball.collision_counter = 0
+    ball.platform_launch_speed_magnitude = initial_launch_speed_magnitude
+    ball.separation_from_platform_center = ball_platform_initial_separation
 end
 
 function ball.check_escape_from_screen()
@@ -180,8 +188,12 @@ end
 
 function ball.launch_from_platform()
     if ball.stuck_to_platform then
-       ball.stuck_to_platform = false
-       ball.speed = first_launch_speed:clone()
+        ball.stuck_to_platform = false
+        local platform_halfwidth = 70
+        local launch_direction = vector(
+            ball.separation_from_platform_center.x / platform_halfwidth, -1
+        )
+        ball.speed = launch_direction / launch_direction:len() * ball.platform_launch_speed_magnitude
     end
 end
 
