@@ -95,6 +95,38 @@ function platform.react_on_decrease_bonus()
     end
 end
 
+function platform.react_on_glue_bonus()
+   platform.glued = true
+   if platform.size == "small" then
+      platform.quad = love.graphics.newQuad(
+         platform.small_tile_x_pos + platform.glued_x_pos_shift,
+         platform.small_tile_y_pos,
+         platform.small_tile_width,
+         platform.small_tile_height,
+         platform.tileset_width,
+         platform.tileset_height
+     )
+   elseif platform.size == "normal" then
+      platform.quad = love.graphics.newQuad(
+         platform.norm_tile_x_pos + platform.glued_x_pos_shift,
+         platform.norm_tile_y_pos,
+         platform.norm_tile_width,
+         platform.norm_tile_height,
+         platform.tileset_width,
+         platform.tileset_height
+     )
+   elseif platform.size == "large" then
+      platform.quad = love.graphics.newQuad(
+         platform.large_tile_x_pos + platform.glued_x_pos_shift,
+         platform.large_tile_y_pos,
+         platform.large_tile_width,
+         platform.large_tile_height,
+         platform.tileset_width,
+         platform.tileset_height
+     )
+   end
+end
+
 function platform.reset_size_to_normal()
     platform.width = platform.norm_tile_width
     platform.height = platform.norm_tile_height

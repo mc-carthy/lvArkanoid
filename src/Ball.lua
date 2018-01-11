@@ -57,9 +57,27 @@ function ball.brick_rebound(shift)
 end
 
 function ball.platform_rebound(shift, platform)
-    ball.bounce_from_sphere(shift, platform)
     ball.increase_collision_counter()
     ball.increase_speed_after_collision()
+    if not platform.glued then
+        ball.bounce_from_sphere(shift, platform)
+    else
+        ball.stuck_to_platform = true
+        local actual_shift = ball.determine_actual_shift(shift)
+        ball.position = ball.position + actual_shift
+        ball.platform_launch_speed_magnitude = ball.speed:len()
+        ball.compute_ball_platform_separation(platform)
+    end
+end
+
+function ball.compute_ball_platform_separation(platform)
+    local platform_centre = vector(
+        platform.position.x + platform.width / 2,
+        platform.position.y + platform.height / 2
+    )
+    local ball_centre = ball.position:clone()
+    ball.separation_from_platform_center = ball_centre - platform_centre
+    print(ball.separation_from_platform_center)
 end
 
 function ball.wall_rebound(shift)
