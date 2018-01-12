@@ -49,7 +49,7 @@ end
 function bonuses.bonus_collected(i, bonus, ball, platform)
     if not bonuses.is_glue(bonus) then
         platform.remove_glued_effect()
-        ball.launch_from_platform()
+        ball.launch_all_balls_from_platform()
     end
     if bonuses.is_decelerate(bonus) then
         ball.react_on_decelerate_bonus()
@@ -61,6 +61,8 @@ function bonuses.bonus_collected(i, bonus, ball, platform)
         platform.react_on_decrease_bonus()
     elseif bonuses.is_glue(bonus) then
         platform.react_on_glue_bonus()
+    elseif bonuses.is_new_ball(bonus) then
+        ball.react_on_new_ball_bonus()
     end
     table.remove(bonuses.current_level_bonuses, i)
 end
@@ -88,6 +90,11 @@ end
 function bonuses.is_glue(bonus)
    local col = bonus.bonus_type % 10
    return col == 2
+end
+
+function bonuses.is_new_ball(bonus)
+   local col = bonus.bonus_type % 10
+   return col == 4
 end
 
 function bonuses.valid_bonus_type(bonus_type)

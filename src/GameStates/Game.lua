@@ -19,7 +19,7 @@ function game.enter(prev_state, ...)
         Levels.current_level = args.current_level
         local level = Levels.require_current_level_from_file()
         Bricks.construct_level_from_table(level)
-        Ball.reposition()
+        Ball.reset()
         Platform.remove_bonus_effects()
     end
     if prev_state == "GamePaused" then
@@ -32,12 +32,12 @@ function game.enter(prev_state, ...)
 end
 
 function game.check_no_more_balls(ball, lives_display)
-    if ball.escaped_screen then
+    if ball.no_more_balls then
         lives_display.lose_life()
         if lives_display.lives < 0 then
             GameState.set_state("GameOver", { Ball, Platform, Bricks, Walls, LivesDisplay })
         else
-            ball.reposition()
+            ball.reset()
             Platform.remove_bonus_effects()
         end
     end
@@ -89,7 +89,7 @@ end
 
 function game.mousereleased(x, y, button)
     if button == 1 then
-        Ball.launch_from_platform()
+        Ball.launch_single_ball_from_platform()
     elseif button == 2 then
         music:pause()
         GameState.set_state(
