@@ -143,32 +143,34 @@ function ball.determine_actual_shift(shift)
     return actual_shift
 end
 
-function ball.min_angle_rebound()
-    local min_horizontal_angle = math.rad(20)
-    local vx, vy = ball.speed:unpack()
+function ball.min_angle_rebound(single_ball)
+    local min_horizontal_rebound_angle = math.rad(20)
+    local vx, vy = single_ball.speed:unpack()
     local new_vx, new_vy = vx, vy
-    local rebound_angle = math.abs(math.atan(vx / vy))
-    if rebound_angle < min_horizontal_angle then
-        new_vx = ball.sign(vx) * ball.speed:len() * math.cos(min_horizontal_angle)
-        new_vy = ball.sign(vy) * ball.speed:len() * math.sin(min_horizontal_angle)
+    rebound_angle = math.abs(math.atan(vy / vx))
+    if rebound_angle < min_horizontal_rebound_angle then
+        new_vx = ball.sign(vx) * single_ball.speed:len() *
+            math.cos( min_horizontal_rebound_angle )
+        new_vy = ball.sign(vy) * single_ball.speed:len() *
+            math.sin(min_horizontal_rebound_angle)
     end
-    ball.speed = vector(new_vx, new_vy)
+    single_ball.speed = vector(new_vx, new_vy)
 end
 
 function ball.sign(x)
     return x < 0 and -1 or x > 0 and 1 or 0
 end
 
-function ball.increase_collision_counter()
-    ball.collision_counter = ball.collision_counter + 1
+function ball.increase_collision_counter(single_ball)
+    single_ball.collision_counter = single_ball.collision_counter + 1
 end
 
-function ball.increase_speed_after_collision()
+function ball.increase_speed_after_collision(single_ball)
     local speed_increase = 20
     local each_n_collisions = 10
-    if ball.collision_counter ~= 0 then
-        if ball.collision_counter >= each_n_collisions == 0 then
-            ball.speed = ball.speed + ball.speed:normalized() * speed_increase
+    if single_ball.collision_counter ~= 0 then
+        if single_ball.collision_counter >= each_n_collisions == 0 then
+            single_ball.speed = single_ball.speed + single_ball.speed:normalized() * speed_increase
         end
     end
 end
@@ -228,7 +230,7 @@ end
 
 function ball.follow_platform(single_ball, platform)
     local platform_centre = vector(platform.position.x + platform.width / 2, platform.position.y + platform.height / 2)
-    single_ball.position = platform_centre + ball.separation_from_platform_center
+    single_ball.position = platform_centre + single_ball.separation_from_platform_center
 end
 
 function ball.launch_single_ball_from_platform()
