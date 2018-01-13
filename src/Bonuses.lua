@@ -13,6 +13,8 @@ bonuses.radius = 14
 bonuses.speed = vector(0, 100)
 bonuses.current_level_bonuses = {}
 
+local bonus_type_rng = love.math.newRandomGenerator(os.time())
+
 function bonuses.new_bonus(position, bonus_type)
     return {
         position = position,
@@ -43,9 +45,35 @@ function bonuses.bonus_type_to_quad(bonus_type)
 end
 
 function bonuses.generate_bonus(position, bonus_type)
+    if bonuses.bonus_type_random(bonus_type) then
+        bonus_type = bonuses.random_bonus_type()
+    end
     if bonuses.valid_bonus_type(bonus_type) then
         bonuses.add_bonus(bonuses.new_bonus(position, bonus_type))
     end
+end
+
+function bonuses.random_bonus_type()
+    local bonus_type
+    local prob = bonus_type_rng:random(400)
+    if prob == 400 then
+        bonus_type = bonuses.choose_valuable_bonus()
+    elseif prob >= 300 then
+        bonus_type = bonuses.choose_common_bonus()
+    else
+        bonus_type = nil
+    end
+    return bonus_type
+end
+
+function bonuses.choose_valuable_bonus()
+    local valuable_bonus_types = { 17, 18 }
+    return valuable_bonus_types[bonus_type_rng:random(#valuable_bonus_types)]
+end
+ 
+function bonuses.choose_common_bonus()
+    local common_bonus_types = { 11, 12, 13, 14, 15, 16 }
+    return common_bonus_types[bonus_type_rng:random(#common_bonus_types)]
 end
 
 function bonuses.bonus_collected(i, bonus, ball, platform)
@@ -71,6 +99,10 @@ function bonuses.bonus_collected(i, bonus, ball, platform)
         walls.current_level_walls["right"].next_level_bonus = true
     end
     table.remove(bonuses.current_level_bonuses, i)
+end
+
+function bonuses.bonus_type_random(bonus_type)
+    return bonus_type == 0
 end
 
 function bonuses.is_decelerate(bonus)
