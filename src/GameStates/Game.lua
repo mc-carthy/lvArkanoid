@@ -29,7 +29,7 @@ function game.enter(prev_state, ...)
         music:resume()
     end
     if prev_state == "GameOver" or prev_state == "GameFinished" then
-        SidePanel.lives_display.reset()
+        SidePanel.reset()
         music:rewind()
     end
 end

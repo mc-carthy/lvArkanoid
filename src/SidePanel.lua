@@ -1,5 +1,6 @@
 local vector = require("src.Vector2")
 local LivesDisplay = require("src.LivesDisplay")
+local ScoreDisplay = require("src.ScoreDisplay")
 
 local side_panel = {}
 
@@ -13,10 +14,7 @@ local position_middle = vector(position_x, height_top)
 local position_bottom = vector(position_x, height_top + height_middle)
 
 side_panel.lives_display = LivesDisplay
-
-function side_panel.draw()
-    side_panel.draw_background()
-end
+side_panel.score_display = ScoreDisplay
 
 function side_panel.draw_background()
     local drawtype = 'fill'
@@ -63,13 +61,20 @@ function side_panel.draw_background()
     love.graphics.setColor(r, g, b, a)
 end
 
+function side_panel.reset()
+    side_panel.lives_display.reset()
+    side_panel.score_display.reset()
+end
+
 function side_panel.update(dt)
     side_panel.lives_display.update(dt)
+    side_panel.score_display.update(dt)
 end
 
 function side_panel.draw()
     side_panel.draw_background()
     side_panel.lives_display.draw()
+    side_panel.score_display.draw()
 end
 
 return side_panel

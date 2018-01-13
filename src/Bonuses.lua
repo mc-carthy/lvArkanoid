@@ -56,7 +56,7 @@ end
 function bonuses.random_bonus_type()
     local bonus_type
     local prob = bonus_type_rng:random(400)
-    if prob <= 400 then
+    if prob == 400 then
         bonus_type = bonuses.choose_valuable_bonus()
     elseif prob >= 300 then
         bonus_type = bonuses.choose_common_bonus()

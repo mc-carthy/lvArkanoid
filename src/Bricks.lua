@@ -1,4 +1,5 @@
 local vector = require("src.Vector2")
+local score_display = require("src.ScoreDisplay")
 
 local bricks = {}
 
@@ -94,6 +95,7 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
             ),
             brick.bonus_type
         )
+        score_display.add_score_for_simple_brick()
         table.remove(bricks.current_level_bricks, i)
         simple_break_sound:play()
     elseif bricks.is_armored(brick) then
@@ -110,6 +112,7 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
             ),
             brick.bonus_type
         )
+        score_display.add_score_for_cracked_brick()
         table.remove(bricks.current_level_bricks, i)
         armored_break_sound:play()
     elseif bricks.is_heavy_armored(brick) then
