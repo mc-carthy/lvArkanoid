@@ -19,14 +19,16 @@ function game.enter(prev_state, ...)
         Levels.current_level = args.current_level
         local level = Levels.require_current_level_from_file()
         Bricks.construct_level_from_table(level)
+        Bonuses.clear_current_level_bonuses()
         Ball.reset()
         Platform.remove_bonus_effects()
+        Walls.remove_bonus_effects()
     end
     if prev_state == "GamePaused" then
         music:resume()
     end
     if prev_state == "GameOver" or prev_state == "GameFinished" then
-        lives_display.reset()
+        LivesDisplay.reset()
         music:rewind()
     end
 end
@@ -39,12 +41,13 @@ function game.check_no_more_balls(ball, lives_display)
         else
             ball.reset()
             Platform.remove_bonus_effects()
+            Walls.remove_bonus_effects()
         end
     end
 end
 
-function game.switch_to_next_level(bricks, ball, levels)
-    if bricks.no_more_bricks then
+function game.switch_to_next_level(bricks, ball, levels, platform)
+    if bricks.no_more_bricks or platform.activated_next_level_bonus then
         bricks.clear_all_bricks()
         if levels.current_level < #levels.sequence_table then
             GameState.set_state("Game", { current_level = levels.current_level + 1 })
@@ -62,7 +65,7 @@ function game.update(dt)
     Bonuses.update(dt)
     Collisions.resolve_collisions()
     game.check_no_more_balls(Ball, LivesDisplay)
-    game.switch_to_next_level(Bricks, Ball, Levels)
+    game.switch_to_next_level(Bricks, Ball, Levels, Platform)
 end
 
 function game.draw()

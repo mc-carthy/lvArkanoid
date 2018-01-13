@@ -13,6 +13,10 @@ function lives_display.add_life()
     lives_display.lives = lives_display.lives + 1
 end
 
+function lives_display.reset()
+    lives_display.lives = 5
+ end
+
 function lives_display.update(dt)
 end
 

@@ -43,6 +43,10 @@ function walls.new_wall(position, width, height)
     }
 end
 
+function walls.remove_bonus_effects()
+    walls.current_level_walls["right"].next_level_bonus = false
+end
+
 function walls.update()
     for _, wall in pairs(walls.current_level_walls) do
         walls.update_wall(wall)
@@ -59,6 +63,11 @@ function walls.draw()
 end
 
 function walls.draw_wall(wall)
+    love.graphics.push("all")
+    love.graphics.setColor(255, 0, 0, 100)
+    if wall.next_level_bonus then
+        love.graphics.setColor(0, 0, 255, 100)
+    end
     love.graphics.rectangle(
         "fill",
         wall.position.x,
@@ -66,6 +75,7 @@ function walls.draw_wall(wall)
         wall.width,
         wall.height
     )
+    love.graphics.pop("all")
 end
 
 return walls

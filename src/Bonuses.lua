@@ -1,5 +1,6 @@
 local vector = require("src.Vector2")
 local livesDisplay = require("src.LivesDisplay")
+local walls = require("src.Walls")
 
 local bonuses = {}
 
@@ -67,6 +68,7 @@ function bonuses.bonus_collected(i, bonus, ball, platform)
     elseif bonuses.is_extra_life(bonus) then
         livesDisplay.add_life()
     elseif bonuses.is_next_level(bonus) then
+        walls.current_level_walls["right"].next_level_bonus = true
     end
     table.remove(bonuses.current_level_bonuses, i)
 end

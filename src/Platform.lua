@@ -32,8 +32,11 @@ platform.width = platform.norm_tile_width
 platform.height = platform.norm_tile_height
 platform.size = "normal"
 
-function platform.bounce_from_wall(shift_platform_x, shift_platform_y)
+function platform.bounce_from_wall(shift_platform_x, shift_platform_y, wall)
     platform.position.x = platform.position.x + shift_platform_x
+    if wall.next_level_bonus then
+        platform.activated_next_level_bonus = true
+    end
 end
 
 function platform.follow_mouse()
@@ -175,6 +178,7 @@ end
 function platform.remove_bonus_effects()
     platform.remove_glued_effect()
     platform.reset_size_to_normal()
+    platform.activated_next_level_bonus = false
 end
 
 function platform.update(dt)

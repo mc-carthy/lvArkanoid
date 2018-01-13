@@ -123,7 +123,7 @@ function collisions.platform_walls_collision(platform, walls)
         }
         overlap, shift_platform = collisions.check_rectangles_overlap(b, a)
         if overlap then
-            platform.bounce_from_wall(shift_platform.x, shift_platform.y)
+            platform.bounce_from_wall(shift_platform.x, shift_platform.y, wall)
         end
     end
 end
