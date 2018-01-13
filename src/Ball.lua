@@ -102,7 +102,7 @@ function ball.compute_ball_platform_separation(single_ball, platform)
     )
     local ball_centre = single_ball.position:clone()
     single_ball.separation_from_platform_center = ball_centre - platform_centre
-    print(single_ball.separation_from_platform_center)
+    -- print(single_ball.separation_from_platform_center)
 end
 
 function ball.wall_rebound(single_ball, shift)

@@ -1,4 +1,5 @@
 local vector = require("src.Vector2")
+local livesDisplay = require("src.LivesDisplay")
 
 local bonuses = {}
 
@@ -63,6 +64,9 @@ function bonuses.bonus_collected(i, bonus, ball, platform)
         platform.react_on_glue_bonus()
     elseif bonuses.is_new_ball(bonus) then
         ball.react_on_new_ball_bonus()
+    elseif bonuses.is_extra_life(bonus) then
+        livesDisplay.add_life()
+    elseif bonuses.is_next_level(bonus) then
     end
     table.remove(bonuses.current_level_bonuses, i)
 end
@@ -95,6 +99,16 @@ end
 function bonuses.is_new_ball(bonus)
    local col = bonus.bonus_type % 10
    return col == 4
+end
+
+function bonuses.is_extra_life(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 8
+end
+
+function bonuses.is_next_level(bonus)
+    local col = bonus.bonus_type % 10
+    return col == 7
 end
 
 function bonuses.valid_bonus_type(bonus_type)
