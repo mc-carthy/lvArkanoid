@@ -2,7 +2,13 @@ local vector = require ("src.Vector2")
 local LivesDisplay = require("src.LivesDisplay")
 
 local score_display = {}
-score_display.position = vector(680, 32)
+
+local position = vector( 650, 32 )
+local width = 120
+local height = 65
+local separation = 35
+local bungee_font = love.graphics.newFont("src/Assets/Fonts/BungeeInline-Regular.ttf", 30)
+
 score_display.score = 0
 
 function score_display.add_score_for_simple_brick()
@@ -22,10 +28,20 @@ function score_display.update(dt)
 end
 
 function score_display.draw()
-    love.graphics.print("Score: " .. tostring(score_display.score),
-        score_display.position.x,
-        score_display.position.y
+    love.graphics.push("all")
+    love.graphics.setFont(bungee_font)
+    love.graphics.setColor(255, 255, 255, 215)
+    love.graphics.printf(
+        "Score:",
+        position.x, position.y,
+        width, "center"
     )
+    love.graphics.printf(
+        score_display.score,
+        position.x, position.y + separation,
+        width, "center"
+    )
+    love.graphics.pop("all")
 end
 
 function score_display.reset()

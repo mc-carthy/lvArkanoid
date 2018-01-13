@@ -1,10 +1,14 @@
-local Vector = require("src.Vector2")
+local vector = require("src.Vector2")
 
 local lives_display = {}
 
+local bungee_font = love.graphics.newFont("src/Assets/Fonts/BungeeInline-Regular.ttf", 30)
+local position = vector(620, 500)
+local width = 170
+local height = 65
+
 lives_display.lives = 5
 lives_display.lives_added_from_score = 0
-lives_display.position = Vector(680, 500)
 
 function lives_display.lose_life()
     lives_display.lives = lives_display.lives - 1
@@ -31,10 +35,15 @@ function lives_display.update(dt)
 end
 
 function lives_display.draw()
-    love.graphics.print(
+    love.graphics.push("all")
+    love.graphics.setFont(bungee_font)
+    love.graphics.setColor(255, 255, 255, 215)
+    love.graphics.printf(
         "Lives: " .. tostring(lives_display.lives),
-        lives_display.position.x, lives_display.position.y
+        position.x, position.y,
+        width, "center"
     )
+    love.graphics.pop("all")
 end
 
 return lives_display

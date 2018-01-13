@@ -2,6 +2,8 @@ local game_paused = {}
 
 local game_objects = {}
 
+local bungee_font = love.graphics.newFont("src/Assets/Fonts/BungeeInline-Regular.ttf", 30)
+
 function game_paused.enter(prev_state, ...)
     game_objects = ...
 end
@@ -9,6 +11,18 @@ end
 function game_paused.exit()
     game_objects = nil
 end
+
+function gamepaused.cast_shadow()
+    love.graphics.push("all")
+    love.graphics.setColor(10, 10, 10, 100)
+    love.graphics.rectangle(
+        "fill",
+        0, 0,
+        love.graphics.getWidth(),
+        love.graphics.getHeight()
+    )
+    love.graphics.pop("all")
+ end
 
 function game_paused.keyreleased(key)
     if key == "return" then
@@ -32,7 +46,11 @@ function game_paused.draw()
             o.draw()
         end
     end
-    love.graphics.print("Game Paused. Press Enter to continue or Esc to quit.", 50, 50)
+    gamepaused.cast_shadow()
+    love.graphics.push("all")
+    love.graphics.setFont(bungee_font)
+    love.graphics.printf("Game Paused...", 108, 110, 400, "center")
+    love.graphics.pop("all")
 end
 
 return game_paused
