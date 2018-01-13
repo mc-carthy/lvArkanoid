@@ -6,6 +6,7 @@ local Platform = require("src.Platform")
 local Walls = require("src.Walls")
 local LivesDisplay = require("src.LivesDisplay")
 local Bonuses = require("src.Bonuses")
+local SidePanel = require("src.SidePanel")
 
 local game = {}
 
@@ -28,7 +29,7 @@ function game.enter(prev_state, ...)
         music:resume()
     end
     if prev_state == "GameOver" or prev_state == "GameFinished" then
-        LivesDisplay.reset()
+        SidePanel.lives_display.reset()
         music:rewind()
     end
 end
@@ -37,7 +38,7 @@ function game.check_no_more_balls(ball, lives_display)
     if ball.no_more_balls then
         lives_display.lose_life()
         if lives_display.lives < 0 then
-            GameState.set_state("GameOver", { Ball, Platform, Bricks, Walls, LivesDisplay })
+            GameState.set_state("GameOver", { Ball, Platform, Bricks, Walls, SidePanel })
         else
             ball.reset()
             Platform.remove_bonus_effects()
@@ -64,7 +65,7 @@ function game.update(dt)
     Walls.update()
     Bonuses.update(dt)
     Collisions.resolve_collisions()
-    game.check_no_more_balls(Ball, LivesDisplay)
+    game.check_no_more_balls(Ball, SidePanel.lives_display)
     game.switch_to_next_level(Bricks, Ball, Levels, Platform)
 end
 
@@ -74,13 +75,13 @@ function game.draw()
     Walls.draw()
     Bricks.draw()
     Bonuses.draw()
-    LivesDisplay.draw()
+    SidePanel.draw()
 end
 
 function game.keyreleased(key)
     if key == "escape" then
         music:pause()
-        GameState.set_state("GamePaused", { Ball, Platform, Bricks, Walls, LivesDisplay })
+        GameState.set_state("GamePaused", { Ball, Platform, Bricks, Walls, SidePanel })
     end
     if key == "c" then
         Bricks.clear_all_bricks()
@@ -97,7 +98,7 @@ function game.mousereleased(x, y, button)
         music:pause()
         GameState.set_state(
             "GamePaused",
-            { Ball, Platform, Bricks, Walls, Lives_display }
+            { Ball, Platform, Bricks, Walls, SidePanel }
         )
     end
 end
