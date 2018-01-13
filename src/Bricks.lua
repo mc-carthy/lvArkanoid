@@ -3,14 +3,28 @@ local score_display = require("src.ScoreDisplay")
 
 local bricks = {}
 
-local simple_break_sound = love.audio.newSource(
-   "src/Assets/SFX/recordered_glass_norm.ogg", "static")
-local armored_hit_sound = love.audio.newSource(
-   "src/Assets/SFX//qubodupImpactMetal_short_norm.ogg", "static")
-local armored_break_sound = love.audio.newSource(
-   "src/Assets/SFX//armored_glass_break_short_norm.ogg", "static")
-local ball_heavy_armored_sound = love.audio.newSource(
-   "src/Assets/SFX//cast_iron_clangs_11_short_norm.ogg", "static")
+local simple_break_sound = {
+    love.audio.newSource("src/Assets/SFX/recordered_glass_norm.ogg", "static"),   
+    love.audio.newSource("src/Assets/SFX/edgardedition_glass_hit_norm.ogg", "static")
+}
+ 
+ local armored_hit_sound = {
+    love.audio.newSource("src/Assets/SFX/qubodupImpactMetal_short_norm.ogg", "static"),
+    love.audio.newSource("src/Assets/SFX/cast_iron_clangs_14_short_norm.ogg", "static"),
+    love.audio.newSource("src/Assets/SFX/cast_iron_clangs_22_short_norm.ogg", "static")
+}
+ 
+ local armored_break_sound = {
+    love.audio.newSource("src/Assets/SFX/armored_glass_break_short_norm.ogg", "static"),
+    love.audio.newSource("src/Assets/SFX/ngruber__breaking-glass_6_short_norm.ogg", "static")
+}
+ 
+ local ball_heavyarmored_sound = {
+    love.audio.newSource("src/Assets/SFX/cast_iron_clangs_11_short_norm.ogg", "static"),
+    love.audio.newSource("src/Assets/SFX/cast_iron_clangs_18_short_norm.ogg", "static")
+}
+
+local snd_rng = love.math.newRandomGenerator(os.time())
 
 bricks.current_level_bricks = {}
 bricks.image = love.graphics.newImage("src/Assets/Images/800x600/bricks.png")
@@ -97,13 +111,16 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
         )
         score_display.add_score_for_simple_brick()
         table.remove(bricks.current_level_bricks, i)
-        simple_break_sound:play()
+        local snd = simple_break_sound[snd_rng:random(#simple_break_sound)]
+        snd:play()
     elseif bricks.is_armored(brick) then
         bricks.weaken_brick(brick)
-        armored_hit_sound:play()
+        local snd = armored_hit_sound[snd_rng:random(#armored_hit_sound)]
+        snd:play()
     elseif bricks.is_scratched(brick) then
         bricks.weaken_brick(brick)
-        armored_hit_sound:play()
+        local snd = armored_hit_sound[snd_rng:random(#armored_hit_sound)]
+        snd:play()
     elseif bricks.is_cracked(brick) then
         bonuses.generate_bonus(
             vector(
@@ -114,9 +131,11 @@ function bricks.brick_hit_by_ball(i, brick, shift_ball, bonuses)
         )
         score_display.add_score_for_cracked_brick()
         table.remove(bricks.current_level_bricks, i)
-        armored_break_sound:play()
+        local snd = armored_break_sound[snd_rng:random(#armored_break_sound)]
+        snd:play()
     elseif bricks.is_heavy_armored(brick) then
-        ball_heavy_armored_sound:play()
+        local snd = ball_heavyarmored_sound[snd_rng:random(#ball_heavyarmored_sound)]
+        snd:play()
     end
 end
 

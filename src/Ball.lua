@@ -6,6 +6,7 @@ local ball_x_shift = 0
 local platform_height = 16
 local platform_starting_pos = vector(300, 500)
 local first_launch_speed = vector(-150, -300)
+local ball_wall_sound = love.audio.newSource("src/Assets/SFX/pumpkin_break_01_short_norm.ogg", "static")
 
 ball.current_balls = {}
 ball.position = vector(200, 500)
@@ -110,6 +111,7 @@ function ball.wall_rebound(single_ball, shift)
     ball.min_angle_rebound(single_ball)
     ball.increase_collision_counter(single_ball)
     ball.increase_speed_after_collision(single_ball)
+    ball_wall_sound:play()
 end
 
 function ball.bounce_from_sphere(single_ball, shift, platform)

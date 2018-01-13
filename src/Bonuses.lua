@@ -15,6 +15,13 @@ bonuses.current_level_bonuses = {}
 
 local bonus_type_rng = love.math.newRandomGenerator(os.time())
 
+local snd_rng = love.math.newRandomGenerator(os.time())
+local bonus_collected_sound = {
+    love.audio.newSource("src/Assets/SFX/bonus1.wav", "static"),
+    love.audio.newSource("src/Assets/SFX/bonus2.wav", "static"),
+    love.audio.newSource("src/Assets/SFX/bonus3.wav", "static")
+ }
+
 function bonuses.new_bonus(position, bonus_type)
     return {
         position = position,
@@ -99,6 +106,8 @@ function bonuses.bonus_collected(i, bonus, ball, platform)
         walls.current_level_walls["right"].next_level_bonus = true
     end
     table.remove(bonuses.current_level_bonuses, i)
+    local snd = bonus_collected_sound[snd_rng:random(#bonus_collected_sound)]
+    snd:play()
 end
 
 function bonuses.bonus_type_random(bonus_type)

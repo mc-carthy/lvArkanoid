@@ -12,7 +12,7 @@ function game_paused.exit()
     game_objects = nil
 end
 
-function gamepaused.cast_shadow()
+function game_paused.cast_shadow()
     love.graphics.push("all")
     love.graphics.setColor(10, 10, 10, 100)
     love.graphics.rectangle(
@@ -46,7 +46,7 @@ function game_paused.draw()
             o.draw()
         end
     end
-    gamepaused.cast_shadow()
+    game_paused.cast_shadow()
     love.graphics.push("all")
     love.graphics.setFont(bungee_font)
     love.graphics.printf("Game Paused...", 108, 110, 400, "center")
