@@ -4,7 +4,7 @@ local buttons = require("src.Buttons")
 local menu = {}
 
 
-local menu_buttons_image = love.graphics.newImage( "src/Assets/Images/800x600/buttons.png" )
+local menu_buttons_image = love.graphics.newImage("src/Assets/Images/800x600/buttons.png")
 local button_tile_width = 128
 local button_tile_height = 64
 local play_button_tile_x_pos = 0
